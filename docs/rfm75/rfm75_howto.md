@@ -10,11 +10,15 @@ After RFM device wired to FTDI, you need to provide URL for FTDI device.
 Check [pyFTDI documentation](https://eblot.github.io/pyftdi/urlscheme.html) how to obtain correct url.
 
 For both rx and tx scripts this value controlled by varible
-```FTDI_URL = 'ftdi://ftdi:232h:555551/1'  # Url for ftdi chip, used to control RX```
+```python
+FTDI_URL = 'ftdi://ftdi:232h:555551/1'  # Url for ftdi chip, used to control RX
+```
 Make sure to use correct URL's for TX and RX script. This example assume that rx and tx devices connected to different FTDI boards.
 
 Next parameter required for pairing:
-```CE_PIN = 7                              # FTDI pin used to as CE for RFM device```
+```python 
+CE_PIN = 7                              # FTDI pin used to as CE for RFM device
+```
 This is [FTDI GPIO](https://eblot.github.io/pyftdi/api/spi.html#gpios) pin used to send CE signal to RFM device
 
 Rest of parameters are related to RFM chip config and explained in comments
