@@ -41,29 +41,36 @@ logging.info("----  Starting module initialisation ------")
 
 controller = FtdiRfm75Controller(ftdi_port, ftdi_gpio, CE_PIN, reg_controller)
 
-if(not controller.is_connected()):
+if(not controller.is_connected()):                                      # Make sure we have chip connected
     logging.error("RFMx controller not found, exit")
     exit(1)
 
-logging.info("Chip id: {}".format(controller.get_chip_id().hex()))
-controller.config_ctrl.reset_config()
-controller.config_ctrl.set_rf_channel(RF_CHANNEL)
-controller.config_ctrl.chip_init(DATA_RATE)
+logging.info("Chip id: {}".format(controller.get_chip_id().hex()))      # Print connected chip ID
+controller.config_ctrl.reset_config()                                   # Reset config to be sure we start from 0 walues
+controller.config_ctrl.set_rf_channel(RF_CHANNEL)                       # Configure RF channel, be sure it is the same for transmitter and receiver
+controller.config_ctrl.chip_init(DATA_RATE)                             # This is RFM magic init, most iportant to set data rate the same om transmitter and on receiver
+# Activate features and disable any dynamic features
 controller.activate_features()
 controller.config_ctrl.disable_dynamic_payload()
 controller.config_ctrl.disable_dynamic_acknowledge()
 
+# Configure adress width up to 5 bytes
 controller.config_ctrl.set_address_width(ADDR_WIDTH)
+# Target receiver address
 controller.config_ctrl.set_tx_address(TX_ADDR)
-
+# Do not pollute air with our RF waves 
 controller.config_ctrl.set_tx_power(Rfm75TxPower.TX_PWR_LOW)
 
+# In this mode tranceiver does not care whether packet was received by target device
 controller.config_ctrl.pipe_ctrl.disable_auto_acknowledge()
 
+# Enable hardware CRC calculation and set it to 2 bytes
 controller.config_ctrl.crc_ctrl.set_crc_len(Rfm75CRCLen.CRC_2)
 controller.config_ctrl.crc_ctrl.enable_crc()
-controller.set_mode_tx()
 
+# Switch to TX mode
+controller.set_mode_tx()
+# Turn on RFM power. Note this is standby II mode. Data is not transmitted until CE enabled and data present in TX buffer. 
 controller.power_up()
 
 logging.info("----  Module initialisation done ------")
@@ -76,7 +83,7 @@ try:
             Rfm75Registers.STATUS)[0]))
         payload = bytearray([0xCA, 0xFE, 0xB0, 0xBA, counter])
         logging.info("Data transmitted {}".format(payload.hex()))
-        controller.write_tx_payload(payload, True)
+        controller.write_tx_payload(payload)
         counter += 1
         if(counter >= 0xFF):
             counter = 0

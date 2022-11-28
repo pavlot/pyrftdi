@@ -29,7 +29,7 @@ class FtdiRfm75Controller:
         self.config_ctrl = Rfm75ConfigController(self._register_controller)
 
         # Event handlers
-        self.on_data_received = None # Called when new data received by loop_receive
+        self.on_data_received = None  # Called when new data received by loop_receive
 
         self.__receive_loop_run = False
         self.__receive_loop_stopped = True
@@ -56,7 +56,7 @@ class FtdiRfm75Controller:
         self.__gpio.write(pins)
         return self.__gpio.read()
 
-    def get_chip_id(self)->bytearray:
+    def get_chip_id(self) -> bytearray:
         return self._register_controller.read_register(Rfm75Registers.B1_CHIP_ID)
 
     def read_rx_payload_len(self) -> int:
@@ -103,25 +103,37 @@ class FtdiRfm75Controller:
 
     def set_mode_rx(self):
         self._register_controller.set_register_bit(Rfm75Registers.CONFIG, 0x00)
-    
-    def write_tx_payload(self, payload: bytearray, is_auto_ack_enabled:bool=False):
-        command = Rfm75Command.W_TX_PAYLOAD if is_auto_ack_enabled else Rfm75Command.W_TX_PAYLOAD_NO_ACK
+
+    def write_tx_payload(self, payload: bytearray, ack_send: bool = False):
+        '''Send data to air.
+        :parameter payload data to be sent. It's length must not exceed PAYLOAD size
+        :parameter ack_send has no meaning when AA disabled, but if any AA enabled, 
+            this parameter allow to control which command actual used for data transfer'''
+        command = Rfm75Command.W_TX_PAYLOAD
+        if self.config_ctrl.pipe_ctrl.is_auto_acknowledge_enabled() and not ack_send:
+            command = Rfm75Command.W_TX_PAYLOAD_NO_ACK
         self.ce_off()
         self.__port.exchange([command], 0, True, False)
         for pld_byte in payload:
             self.__port.exchange([pld_byte], 0, False, False)
         self.__port.exchange([], 0, False, True)
         self.ce_on()
-        sleep(0.002) # This delay is to guarantee that we do not stay in TX mode longer than allowed by datasheet
+        # This delay is to guarantee that we do not stay in TX mode longer than allowed by datasheet
+        sleep(0.002)
         self.ce_off()
+
+    def flush_rx(self):
+        self.__port.exchange([Rfm75Command.FLUSH_RX], True, True)
 
     def __loop_receive(self):
         while(self.__receive_loop_run):
             payload_len = self.read_rx_payload_len()
             if(payload_len > 0):
-                logging.debug("Data received: {}".format(self.read_rx_payload(payload_len).hex()))
+                logging.debug("Data received: {}".format(
+                    self.read_rx_payload(payload_len).hex()))
                 if self.on_data_received:
-                    self.on_data_received(payload_len, self.read_rx_payload(payload_len))
+                    self.on_data_received(
+                        payload_len, self.read_rx_payload(payload_len))
         self.__receive_loop_stopped = True
 
     def start_loop_receive(self):

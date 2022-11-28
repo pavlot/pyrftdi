@@ -63,6 +63,7 @@ controller.config_ctrl.pipe_ctrl.enable_pipe(PIPE_NO)
 controller.config_ctrl.pipe_ctrl.set_rx_pipe_address(PIPE_NO, PIPE_ADDR)
 controller.config_ctrl.pipe_ctrl.set_rx_pipe_payload_width(PIPE_NO, PAYLOAD_SIZE)
 controller.config_ctrl.pipe_ctrl.disable_auto_acknowledge()
+
 controller.config_ctrl.crc_ctrl.set_crc_len(Rfm75CRCLen.CRC_2)
 controller.config_ctrl.crc_ctrl.enable_crc()
 
@@ -78,7 +79,6 @@ try:
         payload_len = controller.read_rx_payload_len()
         if(payload_len > 0):
             logging.info("Data received: {}".format(controller.read_rx_payload(payload_len).hex()))
-            ftdi_port.exchange([Rfm75Command.FLUSH_RX], True, True)
 except KeyboardInterrupt:
     logging.info("----  Keyboard interrupt, shutdown ------")
     controller.ce_off()

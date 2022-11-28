@@ -40,6 +40,12 @@ class Rfm75PipeConfigController:
         logging.info("Auto acknowledge disabled")
         return self._register_controller.write_register(Rfm75Registers.EN_AA, [0])
 
+    def is_auto_acknowledge_enabled(self)->bytearray:
+        """
+        :return Returns True in case if at least one PIPE has AA enabled
+        """
+        return self._register_controller.read_register(Rfm75Registers.EN_AA)[0] > 0
+
     def enable_pipe_auto_acknowledge(self, pipe_no:int)->bytearray:
         """Enables RX pipe auto acknowledge by given number
         :parameter pipe_no RX pipe number to enable auto acknowledge
