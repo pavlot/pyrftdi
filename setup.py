@@ -20,12 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-#    entry_points={
-#        "console_scripts": [
-#            "intesko_dryer_controller_service = intesko_dryer_controller.intesko_dryer_controller_service:main",
-#            "intesko_dryer_controller_cli = intesko_dryer_controller.intesko_dryer_controller_cli:main",
-#        ]
-#    },
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
