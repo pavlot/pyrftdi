@@ -27,7 +27,7 @@ Rest of parameters are related to RFM chip config and explained in comments
 PIPE_NO = 0                             # Pipe number used to receive data
 ADDR_WIDTH = Rfm75AddressWidth.ADDR_5   # How many bytes used for address
 PIPE_ADDR = b'\x11\x22\x33\x22\x11'     # Addres for selected pipe
-RF_CHANNEL = 0x04                       # Operating Rf Channel
+RF_CHANNEL = 0x02                       # Operating Rf Channel
 DATA_RATE = '250ksps'                   # Transfer speed
 PAYLOAD_SIZE = 0x05                     # Static payload size up to 32b
 ```

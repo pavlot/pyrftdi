@@ -1,9 +1,8 @@
 import logging
-from time import sleep
 
 from pyftdi.spi import SpiController
 from struct import *
-from pyRFTdi.Rfm75Enums import Rfm75AddressWidth, Rfm75Command
+from pyRFTdi.Rfm75Enums import Rfm75AddressWidth, Rfm75CRCLen, Rfm75Command
 from pyRFTdi.Rfm75RegisterController import Rfm75RegisterController
 from pyRFTdi.Rfm75Controller import FtdiRfm75Controller
 from pyRFTdi.Rfm75Registers import Rfm75Register, Rfm75Registers
@@ -13,22 +12,26 @@ from pyRFTdi.Rfm75Registers import Rfm75Register, Rfm75Registers
 ##################################################################################################
 
 FTDI_URL = 'ftdi://ftdi:232h:555551/1'  # Url for ftdi chip, used to control RX
+CE_PIN = 7                              # FTDI pin used to as CE for RFM device
+
 PIPE_NO = 0                             # Pipe number used to receive data
+ADDR_WIDTH = Rfm75AddressWidth.ADDR_5   # How many bytes used for address
 PIPE_ADDR = b'\x11\x22\x33\x22\x11'     # Addres for selected pipe
-CE_PIN = 7                              # FTDI pin used to as CE for RFMx device
+RF_CHANNEL = 0x04                       # Operating Rf Channel
+DATA_RATE = '250ksps'                   # Transfer speed
 PAYLOAD_SIZE = 0x05                     # Static payload size up to 32b
 
 ##################################################################################################
 # End of config
 ##################################################################################################
 
-
 logging.basicConfig(level=logging.INFO)
 logging.info("RX part started")
 
 
 ftdi_ctrl = SpiController(cs_count=2)  # spi
-ftdi_ctrl.configure(FTDI_URL) 
+ftdi_ctrl.configure(FTDI_URL)  # Assuming there is only one FT232H.
+
 ftdi_port = ftdi_ctrl.get_port(cs=0, freq=8E6)
 ftdi_gpio = ftdi_ctrl.get_gpio()
 
@@ -42,31 +45,29 @@ if(not controller.is_connected()):
     logging.error("RFMx controller not found, exit")
     exit(1)
 
-controller.reset_config()
-controller.set_address_width(Rfm75AddressWidth.ADDR_5)
-controller.set_rx_pipe_address(PIPE_NO, PIPE_ADDR)
+logging.info("Chip id: {}".format(controller.get_chip_id().hex()))
+controller.config_ctrl.reset_config()
+controller.config_ctrl.set_rf_channel(RF_CHANNEL)
+controller.config_ctrl.set_lna_gain_low()
+controller.config_ctrl.chip_init(DATA_RATE)
 
-controller.chip_init('1Msps')
-
-reg_controller.set_register_bit(
-         Rfm75Registers.RF_SETUP, 0)
+controller.config_ctrl.disable_dynamic_payload()
+controller.config_ctrl.disable_dynamic_acknowledge()
 
 controller.activate_features()
-#reg_controller.write_register(Rfm75Register(0, 0x04, 1), [0x00]) #TODO check it
 
+controller.config_ctrl.set_address_width(ADDR_WIDTH)
 
-controller.enable_dynamic_acknowledge()
-
-controller.enable_pipe(PIPE_NO)
-controller.disable_dynamic_payload()
-controller.set_rx_pipe_payload_width(PIPE_NO, PAYLOAD_SIZE)
-
-controller.enable_pipe_auto_acknowledge(PIPE_NO)
-reg_controller.set_register_bit(Rfm75Registers.CONFIG, 2) # CRC 2 byte
-
+# Configure PIPE
+controller.config_ctrl.pipe_ctrl.enable_pipe(PIPE_NO)
+controller.config_ctrl.pipe_ctrl.set_rx_pipe_address(PIPE_NO, PIPE_ADDR)
+controller.config_ctrl.pipe_ctrl.set_rx_pipe_payload_width(PIPE_NO, PAYLOAD_SIZE)
+controller.config_ctrl.pipe_ctrl.disable_auto_acknowledge()
+controller.config_ctrl.pipe_ctrl.enable_pipe_auto_acknowledge(PIPE_NO)
+controller.config_ctrl.crc_ctrl.set_crc_len(Rfm75CRCLen.CRC_2)
+controller.config_ctrl.crc_ctrl.enable_crc()
 
 controller.set_mode_rx()
-controller.set_rf_channel(0x04)
 
 controller.power_up()
 controller.ce_on()
@@ -77,10 +78,8 @@ try:
     while(1):
         payload_len = controller.read_rx_payload_len()
         if(payload_len > 0):
-            logging.info("Received {} bytes: {}".format(payload_len, controller.read_rx_payload(payload_len).hex()))
-            #sleep(1)
-            #ftdi_port.exchange([Rfm75Command.FLUSH_RX], True, True)
-
+            logging.info("Data received: {}".format(controller.read_rx_payload(payload_len).hex()))
+            ftdi_port.exchange([Rfm75Command.FLUSH_RX], True, True)
 except KeyboardInterrupt:
     logging.info("----  Keyboard interrupt, shutdown ------")
     controller.ce_off()
