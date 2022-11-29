@@ -27,15 +27,18 @@ jobs:
       run: |
         python setup.py bdist
         python setup.py sdist bdist_wheel
-    - name: Build documentation
+    - name: Build API documentation
       run: |
         cd api_doc_src
         make html
+        cd ..
+        mkdir -p docs/api_docs
+        cp -r api_doc_src/build/html/* docs/api_docs
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
-        publish_branch: gh_pages_main
+        publish_branch: gh_pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: api_doc_src/build/html
-        destination_dir: main/api_doc
+        publish_dir: docs
+        destination_dir: ${GITHUB_REF##*/}/docs
         force_orphan: true
