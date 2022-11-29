@@ -36,5 +36,5 @@ jobs:
         publish_branch: gh_pages_main
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: api_doc_src/_build/
-        destination_dir: /main/api_doc
+        destination_dir: main/api_doc
         force_orphan: true
