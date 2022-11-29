@@ -14,10 +14,11 @@ class FtdiRfm75Controller:
 
     def __init__(self, port: SpiController, gpio: SpiGpioPort, ce_pin: int, register_controller: Rfm75RegisterController):
         """Constructor
-        :parameter port: SpiController Instance of SpiController interface which used to communicate with module
-        :parameter gpio: SpiGpioPort Instance of SpiGpioPort interface which used to control CE pin state
-        :parameter ce_pin: int GPIO pin number for CE pin
-        :parameter register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
+
+        :param port: SpiController Instance of SpiController interface which used to communicate with module
+        :param gpio: SpiGpioPort Instance of SpiGpioPort interface which used to control CE pin state
+        :param ce_pin: int GPIO pin number for CE pin
+        :param register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
         """
         self.__port = port
         self.__gpio = gpio
@@ -40,7 +41,9 @@ class FtdiRfm75Controller:
 
     def ce_on(self) -> int:
         """Set pin CE to HIGH value
-        :return GPIO state after operation
+        
+        :return:  GPIO state after operation
+        
         """
         pins = self.__gpio.read()
         pins |= 1 << self.__ce_pin
@@ -49,7 +52,9 @@ class FtdiRfm75Controller:
 
     def ce_off(self) -> int:
         """Set pin CE to LOW value
-        :return GPIO state after operation
+        
+        :return:  GPIO state after operation
+        
         """
         pins = self.__gpio.read()
         pins &= ~((1 << self.__ce_pin))
@@ -61,14 +66,20 @@ class FtdiRfm75Controller:
 
     def read_rx_payload_len(self) -> int:
         """Retrieve available payload length. Could be used to determinate whether new data available in RX buffer
-        :return number of bytes available for the top R_RX_PAYLOAD in the RX FIFO"""
+        
+        :return:  number of bytes available for the top R_RX_PAYLOAD in the RX FIFO
+        
+        """
         result = int(self.__port.exchange([Rfm75Command.R_RX_PL_WID], 1)[0])
         logging.debug("R_RX_PAYLOAD length is {}".format(result))
         return result
 
     def read_rx_payload(self, len: int) -> bytearray:
         """Retrieve given amount of bytes from RX buffer.
-        :return R_RX_PAYLOAD as bytearray"""
+        
+        :return:  R_RX_PAYLOAD as bytearray
+        
+        """
         return self.__port.exchange([Rfm75Command.R_RX_PAYLOAD], len, True, True)
 
     def is_connected(self):
@@ -85,13 +96,19 @@ class FtdiRfm75Controller:
 
     def power_up(self):
         """" Set POWER_UP mode for RFx module
-        :return bytearray representation of Rfm75Registers.CONFIG register"""
+        
+        :return:  bytearray representation of Rfm75Registers.CONFIG register
+        
+        """
         logging.info("RFx module power up")
         return self._register_controller.set_register_bit(Rfm75Registers.CONFIG, 1)
 
     def power_down(self):
-        """" Set POWER_DOWN mode for RFx module
-        :return bytearray representation of Rfm75Registers.CONFIG register"""
+        """ Set POWER_DOWN mode for RFx module
+        
+        :return:  bytearray representation of Rfm75Registers.CONFIG register
+        
+        """
         logging.info("RFx module power down")
         return self._register_controller.unset_register_bit(Rfm75Registers.CONFIG, 1)
 
@@ -105,10 +122,12 @@ class FtdiRfm75Controller:
         self._register_controller.set_register_bit(Rfm75Registers.CONFIG, 0x00)
 
     def write_tx_payload(self, payload: bytearray, ack_send: bool = False):
-        '''Send data to air.
-        :parameter payload data to be sent. It's length must not exceed PAYLOAD size
-        :parameter ack_send has no meaning when AA disabled, but if any AA enabled, 
-            this parameter allow to control which command actual used for data transfer'''
+        """Send data to the air.
+
+        :param payload: data to be sent. It's length must not exceed PAYLOAD size
+        :param ack_send: has no meaning when AA disabled, but if any AA enabled, this parameter allow to control which command actual used for data transfer
+        
+        """
         command = Rfm75Command.W_TX_PAYLOAD
         if self.config_ctrl.pipe_ctrl.is_auto_acknowledge_enabled() and not ack_send:
             command = Rfm75Command.W_TX_PAYLOAD_NO_ACK

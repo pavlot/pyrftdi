@@ -9,7 +9,8 @@ from pyRFTdi.Rfm75Registers import Rfm75Registers
 class Rfm75ConfigController:
     def __init__(self, register_controller: Rfm75RegisterController):
         """Constructor
-        :parameter register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
+
+        :param register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
         """
         self._register_controller = register_controller
         self.pipe_ctrl = Rfm75PipeConfigController(self._register_controller)
@@ -20,6 +21,10 @@ class Rfm75ConfigController:
         frequency is set by the RF_CH register in register bank 0 according to the following
         formula: F0= 2400 + RF_CH (MHz). The resolution of the RF channel frequency is 1MHz.
         return channel number set
+
+        :param channel: Channel number to be set
+
+        :return: Value stored in channel register
         """
         logging.info("RF channel set to {}".format(channel))
         return int(self._register_controller.write_register(
@@ -73,7 +78,8 @@ class Rfm75ConfigController:
 
     def chip_init(self, speed: str):
         """Initialize chip with different magic numbers, required for proper operation
-        :parameter speed One of: "1Msps","2Msps","250ksps"
+
+        :param speed: One of: "1Msps","2Msps","250ksps"
         """
         logging.info("Data rate is: {}".format(speed))
         if speed == "1Msps":
@@ -141,8 +147,10 @@ class Rfm75ConfigController:
 
     def set_tx_address(self, address: bytearray) -> bytearray:
         """Set address for TX operation.
-        :parameter address bytearray with address values. Length depends on value set by set_address_width() method for RX device
-        :return address bytearray for TX
+
+        :param address: bytearray with address values. Length depends on value set by set_address_width() method for RX device
+        
+        :return:  address bytearray for TX
         """
         logging.info("TX address set to {}".format(address.hex()))
         return self._register_controller.write_register(Rfm75Registers.TX_ADDR, address)

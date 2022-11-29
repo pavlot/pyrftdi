@@ -8,7 +8,7 @@ class Rfm75CRCConfigController:
     """Class to configure and controll device CRC handling"""
     def __init__(self, register_controller: Rfm75RegisterController):
         """Constructor
-        :parameter register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
+        :param register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
         """
         self._register_controller = register_controller
 
@@ -24,7 +24,8 @@ class Rfm75CRCConfigController:
 
     def get_crc_len(self)->Rfm75CRCLen:
         """Get CRC encoding scheme
-        :return Rfm75CRCLen of used encoding"""
+        
+:return:  Rfm75CRCLen of used encoding"""
         val = self._register_controller.read_register_bit(Rfm75Registers.CONFIG, 2)
         return Rfm75CRCLen.CRC_2 if val > 0 else Rfm75CRCLen.CRC_1
 

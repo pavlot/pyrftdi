@@ -51,9 +51,10 @@ class Rfm75RegisterController:
 
     def write_register(self, register: Rfm75Register, values: bytearray) -> bytearray:
         """Write value to given register.
-        :parameter register Rfm75Register which defines address bank and register size
-        :parameter values Bytearray of values which represent register
-        :return new register value
+        :param register: Rfm75Register which defines address bank and register size
+        :param values: Bytearray of values which represent register
+        
+:return:  new register value
         """
         if(len(values) > register.size):
             raise RuntimeError(
