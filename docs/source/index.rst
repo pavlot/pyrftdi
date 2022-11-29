@@ -10,11 +10,6 @@ Welcome to pyRFTdi's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   rfm75/index
    pyRFTdi
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
