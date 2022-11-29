@@ -6,6 +6,15 @@
 Welcome to pyRFTdi's documentation!
 ===================================
 
+Installation
+------------
+This is development branch which could be installed as:
+
+.. code-block:: bash
+   :linenos:
+
+   pip install -U -e git+https://github.com/pavlot/pyrftdi.git#egg=pyrftdi
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
