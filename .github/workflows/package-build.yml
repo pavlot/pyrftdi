@@ -27,7 +27,7 @@ jobs:
       run: |
         python setup.py bdist
         python setup.py sdist bdist_wheel
-    - name: Build API documentation
+    - name: Build documentation
       run: |
         cd api_doc_src
         make html
@@ -40,5 +40,5 @@ jobs:
         publish_branch: gh_pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: docs
-        destination_dir: ${GITHUB_REF##*/}/docs
+        destination_dir: ${{ github.ref_name }}/docs
         force_orphan: true
