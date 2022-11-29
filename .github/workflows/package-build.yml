@@ -22,6 +22,7 @@ jobs:
         pip install setuptools wheel sphinx sphinx_autodoc_typehints
         # Shpinx Read the Doc theme seems to never get a release w/ fixed issues
         pip install -U -e git+https://github.com/readthedocs/sphinx_rtd_theme.git@2b8717a3647cc650625c566259e00305f7fb60aa#egg=sphinx_rtd_theme
+        pip install -U -e git+https://github.com/pavlot/pyrftdi.git
     - name: Build package
       run: |
         python setup.py bdist
@@ -35,6 +36,6 @@ jobs:
       with:
         publish_branch: gh_pages_main
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: api_doc_src/_build/
+        publish_dir: api_doc_src/build/html
         destination_dir: main/api_doc
         force_orphan: true
