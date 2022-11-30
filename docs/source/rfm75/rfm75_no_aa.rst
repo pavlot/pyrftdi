@@ -31,7 +31,7 @@ Next parameter required for pairing:
     
     CE_PIN = 7                              # FTDI pin used to as CE for RFM device
 
-This is [FTDI GPIO](https://eblot.github.io/pyftdi/api/spi.html#gpios) pin used to send CE signal to RFM device
+This is `FTDI GPIO<https://eblot.github.io/pyftdi/api/spi.html#gpios`_ pin used to send CE signal to RFM device
 
 Rest of parameters are related to RFM chip config and explained in comments
 
