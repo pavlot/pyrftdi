@@ -1,18 +1,18 @@
 Simple TX/RX
 ============
 
-:github:`/examples/rx_tx/` demonstrate simplest way to transfer data between two RFM devices using FTDI.
+:github:`/examples/rx_tx/` demonstrate the simplest way to transfer data between two RFM devices using FTDI.
 
-In this example there are two scripts: :github:`/examples/rx_tx/rx.py` to receive data 
+In this example, there are two scripts: :github:`/examples/rx_tx/rx.py` to receive data 
 and :github:`/examples/rx_tx/tx.py` to transfer data
 
-Each script runs infinite loop to transmit/receive data. 
+Each script runs an infinite loop to transmit/receive data. 
 
 Payload is 5 byte length and contains magic sequence **cafeb0baxx**, where xx is a counter
 
 Configuration parameters
 ------------------------
-After RFM device wired to FTDI, you need to provide URL for FTDI device.
+After RFM device wired to FTDI, you need to provide a URL for the FTDI device.
 Check `pyFTDI documentation <https://eblot.github.io/pyftdi/urlscheme.html>`_ how to obtain correct url.
 
 For both rx and tx scripts this value controlled by varible
@@ -22,7 +22,7 @@ For both rx and tx scripts this value controlled by varible
 
     FTDI_URL = 'ftdi://ftdi:232h:555551/1'  # Url for ftdi chip, used to control RX
 
-Make sure to use correct URL's for TX and RX script. This example assume that rx and tx devices connected to different FTDI boards.
+Make sure to use correct URLs for TX and RX script. This example assumes that rx and tx devices connected to different FTDI boards.
 
 Next parameter required for pairing:
 
@@ -47,7 +47,7 @@ Rest of parameters are related to RFM chip config and explained in comments
 
 Configure chip to transmit/receive data
 ---------------------------------------
-Simplest mode to transmit data it is when transmitter send data into the air and do not care whether it was received. Typical configuration is:
+The simplest mode to transmit data it is when a transmitter sends data into the air and does not care whether it was received. Typical configuration is:
 
 TX Part
 
@@ -95,9 +95,9 @@ After this call
 
     controller.write_tx_payload(payload)
 
-to send payload.
+to send a payload.
 
-Receiver initialisation almost the same as for transmiter, except few details:
+Receiver initialisation almost the same as for transmitter, except few details:
 
 First pipe should be configured:
 
@@ -109,7 +109,7 @@ First pipe should be configured:
     controller.config_ctrl.pipe_ctrl.set_rx_pipe_payload_width(PIPE_NO, PAYLOAD_SIZE)   # Static payload size
     controller.config_ctrl.pipe_ctrl.disable_auto_acknowledge() # Disable AA
 
-After initialisation done chip must be set to RX mode using following calls:
+After initialisation is done, the chip must be set to RX mode using following calls:
 
 .. code-block:: python
     :linenos:
@@ -120,7 +120,7 @@ After initialisation done chip must be set to RX mode using following calls:
 
 Remember about :code:`ce_on()` after :code:`power_up()` - this will instruct RFP device to listen air for incoming data.
 
-When data awailable :code:`controller.read_rx_payload_len()` return non zero walue, so typical receive loop will be like:
+When data available :code:`controller.read_rx_payload_len()` return non-zero value, so typical receive loop will be like:
 
 .. code-block:: python
     :linenos:
