@@ -5,6 +5,7 @@ from pyRFTdi.Rfm75Registers import Rfm75Registers
 
 class Rfm75PipeConfigController:
     """Class to configure and controll device RX pipes"""
+
     def __init__(self, register_controller: Rfm75RegisterController):
         """Constructor
         :param register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
@@ -14,7 +15,7 @@ class Rfm75PipeConfigController:
     def enable_pipe(self, pipe_no: int) -> bytearray:
         """Enables RX pipe by given number
         :param pipe_no RX pipe number to enable
-        
+
 :return:  Bytearray representing Rfm75Registers.EN_RXADDR value
         """
         logging.info("Pipe {} enabled".format(pipe_no))
@@ -26,7 +27,7 @@ class Rfm75PipeConfigController:
     def disable_pipe(self, pipe_no: int):
         """Disables RX pipe by given number
         :param pipe_no RX pipe number to disable
-        
+
 :return:  Bytearray representing Rfm75Registers.EN_RXADDR value
         """
         logging.info("Pipe {} disabled".format(pipe_no))
@@ -35,43 +36,43 @@ class Rfm75PipeConfigController:
                 "Wrong pipe number: {}. Allowed values 0-5".format(pipe_no))
         return self._register_controller.unset_register_bit(Rfm75Registers.EN_RXADDR, pipe_no)
 
-    def disable_auto_acknowledge(self)->bytearray:
+    def disable_auto_acknowledge(self) -> bytearray:
         """Disable AA for all pipes
-        
+
 :return:  Bytearray representing Rfm75Registers.EN_AA value
         """
         logging.info("Auto acknowledge disabled")
         return self._register_controller.write_register(Rfm75Registers.EN_AA, [0])
 
-    def is_auto_acknowledge_enabled(self)->bytearray:
+    def is_auto_acknowledge_enabled(self) -> bytearray:
         """
-        
+
 :return:  Returns True in case if at least one PIPE has AA enabled
         """
         return self._register_controller.read_register(Rfm75Registers.EN_AA)[0] > 0
 
-    def enable_pipe_auto_acknowledge(self, pipe_no:int)->bytearray:
+    def enable_pipe_auto_acknowledge(self, pipe_no: int) -> bytearray:
         """Enables RX pipe auto acknowledge by given number
         :param pipe_no RX pipe number to enable auto acknowledge
-        
+
 :return:  Bytearray representing Rfm75Registers.EN_AA value
         """
         logging.info("Auto acknowledge for pipe {} enabled".format(pipe_no))
         return self._register_controller.set_register_bit(Rfm75Registers.EN_AA, pipe_no)
 
-    def disable_pipe_auto_acknowledge(self, pipe_no:int)->bytearray:
+    def disable_pipe_auto_acknowledge(self, pipe_no: int) -> bytearray:
         """Disables RX pipe auto acknowledge by given number
         :param pipe_no RX pipe number to disable auto acknowledge
-        
+
 :return:  Bytearray representing Rfm75Registers.EN_AA value
         """
         logging.info("Auto acknowledge for pipe {} disabled".format(pipe_no))
         return self._register_controller.unset_register_bit(Rfm75Registers.EN_AA, pipe_no)
 
-    def get_pipe_auto_acknowledge(self, pipe_no:int)->bool:
+    def get_pipe_auto_acknowledge(self, pipe_no: int) -> bool:
         """Get RX pipe auto acknowledge by given number
         :param pipe_no RX pipe number to read auto acknowledge
-        
+
 :return:  True if Pipe AA is set
         """
         logging.info("Auto acknowledge for pipe {} disabled".format(pipe_no))
@@ -81,7 +82,7 @@ class Rfm75PipeConfigController:
         """Set address for given pipe.
         :param pipe_no Pipe number in range 0-5 for which address is set
         :param address bytearray with address values. Length depends on value set by set_address_width() method
-        
+
 :return:  address bytearray for given pipe
         """
         pipe_addr_registers = [
@@ -100,7 +101,7 @@ class Rfm75PipeConfigController:
     def get_rx_pipe_address(self, pipe_no: int) -> bytearray:
         """Get address for given pipe.
         :param pipe_no Pipe number in range 0-5 for which address is set
-        
+
 :return:  address bytearray for given pipe
         """
         pipe_addr_registers = [
@@ -118,7 +119,7 @@ class Rfm75PipeConfigController:
         """Set payload width for given pipe in static mode.
         :param pipe_no Pipe number in range 0-5 for which payload width is set
         :param width Width in range 0-32
-        
+
 :return:  Bytearray representation for Rfm75Registers.RX_PW_PX, where X = pipe_no
         """
 
@@ -145,7 +146,7 @@ class Rfm75PipeConfigController:
         """Set payload width for given pipe in static mode.
         :param pipe_no Pipe number in range 0-5 for which payload width is set
         :param width Width in range 0-32
-        
+
 :return:  Bytearray representation for Rfm75Registers.RX_PW_PX, where X = pipe_no
         """
         pipe_registers = [
@@ -159,13 +160,15 @@ class Rfm75PipeConfigController:
         register = pipe_registers[pipe_no]
         return int(self._register_controller.read_register(register)[0])
 
-    def enable_pipe_dynamic_payload(self, pipe_no:int):
+    def enable_pipe_dynamic_payload(self, pipe_no: int):
         logging.info("Enabling pipe {} dynamic_payload".format(pipe_no))
-        self._register_controller.set_register_bit(Rfm75Registers.DYNPD, pipe_no)
+        self._register_controller.set_register_bit(
+            Rfm75Registers.DYNPD, pipe_no)
 
-    def is_enabled_pipe_dynamic_payload(self, pipe_no:int):
+    def is_enabled_pipe_dynamic_payload(self, pipe_no: int):
         return self._register_controller.read_register_bit(Rfm75Registers.DYNPD) > 0
 
-    def disable_pipe_dynamic_payload(self, pipe_no:int):
+    def disable_pipe_dynamic_payload(self, pipe_no: int):
         logging.info("Disabling pipe {} dynamic_payload".format(pipe_no))
-        self._register_controller.set_register_bit(Rfm75Registers.DYNPD, pipe_no)
+        self._register_controller.set_register_bit(
+            Rfm75Registers.DYNPD, pipe_no)

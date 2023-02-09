@@ -89,13 +89,7 @@ try:
             counter = 0
         logging.debug("Status register after send: b{:b}".format(reg_controller.read_register(
             Rfm75Registers.STATUS)[0]))
-        if(reg_controller.read_register_bit(Rfm75Registers.STATUS, 4)>0):
-            logging.warning("MAX_RT detected, cleaning")
-            reg_controller.set_register_bit(
-                Rfm75Registers.STATUS, 4)
-        reg_controller.set_register_bit(
-                Rfm75Registers.STATUS, 5)
-
+            
         sleep(1)
 
 except KeyboardInterrupt:

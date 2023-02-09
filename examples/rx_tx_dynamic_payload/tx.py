@@ -23,7 +23,7 @@ TX_ADDR = b'\x11\x22\x33\x22\x11'       # Addres where to transmit
 PIPE_ADDR = b'\x11\x22\x33\x22\x11'     # Addres for selected pipe, in tx mode 
                                         # requiered for AutoAcknowledge to work
 RF_CHANNEL = 0x04                       # Operating Rf Channel
-DATA_RATE = '250ksps'                   # Transfer speed
+DATA_RATE = '1Msps'                   # Transfer speed
 PAYLOAD_SIZE = 0x05                     # Static payload size up to 32b
 
 ##################################################################################################
@@ -51,20 +51,23 @@ logging.info("Chip id: {}".format(controller.get_chip_id().hex()))
 controller.config_ctrl.reset_config()
 controller.config_ctrl.set_rf_channel(RF_CHANNEL)
 controller.config_ctrl.chip_init(DATA_RATE)
+controller.config_ctrl.enable_dynamic_payload()
+controller.config_ctrl.enable_payload_ack()
+
 controller.activate_features()
-controller.config_ctrl.disable_dynamic_payload()
-controller.config_ctrl.disable_dynamic_acknowledge()
 
 controller.config_ctrl.set_address_width(ADDR_WIDTH)
 controller.config_ctrl.set_tx_address(TX_ADDR)
 
-controller.config_ctrl.set_tx_power(Rfm75TxPower.TX_PWR_LOW)
+controller.config_ctrl.set_tx_power(Rfm75TxPower.TX_PWR_HIGH)
 
 controller.config_ctrl.pipe_ctrl.disable_auto_acknowledge()
 
 controller.config_ctrl.pipe_ctrl.enable_pipe(PIPE_NO)
+#controller.config_ctrl.enable_dynamic_acknowledge()
+controller.config_ctrl.pipe_ctrl.enable_pipe_dynamic_payload(0) # Always pipe 0 on TX side
 controller.config_ctrl.pipe_ctrl.set_rx_pipe_address(PIPE_NO, PIPE_ADDR)
-controller.config_ctrl.pipe_ctrl.set_rx_pipe_payload_width(PIPE_NO, PAYLOAD_SIZE)
+#controller.config_ctrl.pipe_ctrl.set_rx_pipe_payload_width(PIPE_NO, PAYLOAD_SIZE)
 controller.config_ctrl.pipe_ctrl.enable_pipe_auto_acknowledge(PIPE_NO)
 
 controller.config_ctrl.crc_ctrl.set_crc_len(Rfm75CRCLen.CRC_2)

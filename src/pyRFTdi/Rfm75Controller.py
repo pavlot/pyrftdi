@@ -41,9 +41,9 @@ class FtdiRfm75Controller:
 
     def ce_on(self) -> int:
         """Set pin CE to HIGH value
-        
+
         :return:  GPIO state after operation
-        
+
         """
         pins = self.__gpio.read()
         pins |= 1 << self.__ce_pin
@@ -52,9 +52,9 @@ class FtdiRfm75Controller:
 
     def ce_off(self) -> int:
         """Set pin CE to LOW value
-        
+
         :return:  GPIO state after operation
-        
+
         """
         pins = self.__gpio.read()
         pins &= ~((1 << self.__ce_pin))
@@ -66,9 +66,9 @@ class FtdiRfm75Controller:
 
     def read_rx_payload_len(self) -> int:
         """Retrieve available payload length. Could be used to determinate whether new data available in RX buffer
-        
+
         :return:  number of bytes available for the top R_RX_PAYLOAD in the RX FIFO
-        
+
         """
         result = int(self.__port.exchange([Rfm75Command.R_RX_PL_WID], 1)[0])
         logging.debug("R_RX_PAYLOAD length is {}".format(result))
@@ -76,9 +76,9 @@ class FtdiRfm75Controller:
 
     def read_rx_payload(self, len: int) -> bytearray:
         """Retrieve given amount of bytes from RX buffer.
-        
+
         :return:  R_RX_PAYLOAD as bytearray
-        
+
         """
         return self.__port.exchange([Rfm75Command.R_RX_PAYLOAD], len, True, True)
 
@@ -96,18 +96,18 @@ class FtdiRfm75Controller:
 
     def power_up(self):
         """" Set POWER_UP mode for RFx module
-        
+
         :return:  bytearray representation of Rfm75Registers.CONFIG register
-        
+
         """
         logging.info("RFx module power up")
         return self._register_controller.set_register_bit(Rfm75Registers.CONFIG, 1)
 
     def power_down(self):
         """ Set POWER_DOWN mode for RFx module
-        
+
         :return:  bytearray representation of Rfm75Registers.CONFIG register
-        
+
         """
         logging.info("RFx module power down")
         return self._register_controller.unset_register_bit(Rfm75Registers.CONFIG, 1)
@@ -126,7 +126,7 @@ class FtdiRfm75Controller:
 
         :param payload: data to be sent. It's length must not exceed PAYLOAD size
         :param ack_send: has no meaning when AA disabled, but if any AA enabled, this parameter allow to control which command actual used for data transfer
-        
+
         """
         command = Rfm75Command.W_TX_PAYLOAD
         if self.config_ctrl.pipe_ctrl.is_auto_acknowledge_enabled() and not ack_send:
@@ -141,13 +141,40 @@ class FtdiRfm75Controller:
         sleep(0.002)
         self.ce_off()
 
+    def is_rx_data_ready(self) -> bool:
+        """Check if RX contains new data"""
+        return self._register_controller.read_register_bit(Rfm75Registers.STATUS, 6) > 0
+
+    def unset_rx_data_ready(self) -> bytearray:
+        """Reset RX"""
+        return self._register_controller.set_register_bit(
+            Rfm75Registers.STATUS, 6)
+
+    def is_max_rt(self) -> bool:
+        """Check if maximum number of retransmittion reached"""
+        return self._register_controller.read_register_bit(Rfm75Registers.STATUS, 4) > 0
+
+    def unset_max_rt(self) -> bytearray:
+        """Reset MAX_RT event"""
+        return self._register_controller.set_register_bit(
+            Rfm75Registers.STATUS, 4)
+
+    def is_data_sent(self):
+        """In AA mode return true when data succesfully sent and ACK received"""
+        return self._register_controller.read_register_bit(Rfm75Registers.STATUS, 5) > 0
+
+    def unset_data_sent(self):
+        """Unset data sent bit"""
+        return self._register_controller.set_register_bit(
+            Rfm75Registers.STATUS, 5)
+
     def flush_rx(self):
         self.__port.exchange([Rfm75Command.FLUSH_RX], True, True)
 
     def __loop_receive(self):
-        while(self.__receive_loop_run):
+        while (self.__receive_loop_run):
             payload_len = self.read_rx_payload_len()
-            if(payload_len > 0):
+            if (payload_len > 0):
                 logging.debug("Data received: {}".format(
                     self.read_rx_payload(payload_len).hex()))
                 if self.on_data_received:

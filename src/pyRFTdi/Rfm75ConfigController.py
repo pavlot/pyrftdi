@@ -128,14 +128,6 @@ class Rfm75ConfigController:
         self._register_controller.write_register(
             Rfm75Registers.B1_REG_0E, [0x41, 0x20, 0x08, 0x04, 0x81, 0x20, 0xCF, 0xF7, 0xFE, 0xFF, 0xFF])
 
-    def enable_dynamic_payload(self, pipe_no):
-        self._register_controller.set_register_bit(
-            Rfm75Registers.FEATURE, 2)
-
-    def disable_dynamic_payload(self):
-        self._register_controller.unset_register_bit(
-            Rfm75Registers.FEATURE, 2)  # Disable dynamic payload
-
     def enable_dynamic_acknowledge(self) -> bytearray:
         return self._register_controller.set_register_bit(Rfm75Registers.FEATURE, 0)
 
@@ -145,11 +137,34 @@ class Rfm75ConfigController:
     def disable_dynamic_acknowledge(self) -> bytearray:
         return self._register_controller.unset_register_bit(Rfm75Registers.FEATURE, 0)
 
+    def enable_payload_ack(self):
+        return self._register_controller.set_register_bit(
+            Rfm75Registers.FEATURE, 1)
+
+    def disable_payload_ack(self):
+        return self._register_controller.unset_register_bit(
+            Rfm75Registers.FEATURE, 1)
+
+    def is_enabled_payload_ack(self):
+        return self._register_controller.read_register_bit(
+            Rfm75Registers.FEATURE, 1) > 0
+
+    def enable_dynamic_payload(self):
+        return self._register_controller.set_register_bit(
+            Rfm75Registers.FEATURE, 2)
+
+    def disable_dynamic_payload(self):
+        return self._register_controller.unset_register_bit(
+            Rfm75Registers.FEATURE, 2)  # Disable dynamic payload
+
+    def is_enabled_dynamic_payload(self):
+        return self._register_controller.read_register_bit(Rfm75Registers.FEATURE, 2) > 0
+
     def set_tx_address(self, address: bytearray) -> bytearray:
         """Set address for TX operation.
 
         :param address: bytearray with address values. Length depends on value set by set_address_width() method for RX device
-        
+
         :return:  address bytearray for TX
         """
         logging.info("TX address set to {}".format(address.hex()))
