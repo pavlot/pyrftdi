@@ -1,7 +1,7 @@
 import logging
 from time import sleep
 
-from pyftdi.spi import SpiController, SpiGpioPort
+from pyRFTdi.spi import SpiController#, SpiGpioPort
 from pyRFTdi.Rfm75ConfigController import Rfm75ConfigController
 
 from pyRFTdi.Rfm75Enums import Rfm75Command
@@ -12,7 +12,7 @@ from pyRFTdi.Rfm75Registers import Rfm75Registers
 class FtdiRfm75Controller:
     """This class intended to control RFM75(73) modules with SPI and GPIO ports"""
 
-    def __init__(self, port: SpiController, gpio: SpiGpioPort, ce_pin: int, register_controller: Rfm75RegisterController):
+    def __init__(self, port: SpiController, ce_pin, register_controller: Rfm75RegisterController):
         """Constructor
 
         :param port: SpiController Instance of SpiController interface which used to communicate with module
@@ -21,9 +21,7 @@ class FtdiRfm75Controller:
         :param register_controller: Rfm75RegisterController register controller used for low-level communication with module registers
         """
         self.__port = port
-        self.__gpio = gpio
         self.__ce_pin = ce_pin
-        self.__gpio.set_direction(1 << ce_pin, 1 << ce_pin)
         self.ce_off()
 
         self._register_controller = register_controller
@@ -45,10 +43,8 @@ class FtdiRfm75Controller:
         :return:  GPIO state after operation
 
         """
-        pins = self.__gpio.read()
-        pins |= 1 << self.__ce_pin
-        self.__gpio.write(pins)
-        return self.__gpio.read()
+        self.__ce_pin.on()
+        return  #TODO Return real pin value
 
     def ce_off(self) -> int:
         """Set pin CE to LOW value
@@ -56,10 +52,8 @@ class FtdiRfm75Controller:
         :return:  GPIO state after operation
 
         """
-        pins = self.__gpio.read()
-        pins &= ~((1 << self.__ce_pin))
-        self.__gpio.write(pins)
-        return self.__gpio.read()
+        self.__ce_pin.off()
+        return 0 #TODO Return real pin value
 
     def get_chip_id(self) -> bytearray:
         return self._register_controller.read_register(Rfm75Registers.B1_CHIP_ID)

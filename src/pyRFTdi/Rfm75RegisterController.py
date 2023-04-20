@@ -1,4 +1,3 @@
-from typing import Iterable
 from pyRFTdi.Rfm75Registers import Rfm75Register, Rfm75Registers
 from pyRFTdi.Rfm75Enums import Rfm75Command
 
@@ -67,7 +66,10 @@ class Rfm75RegisterController:
 
         self.set_bank_number(register.bank)
         reg_write = register.addr | Rfm75Command.WRITE
-        self.__port.write(reg_write.to_bytes(1, 'little'), True, False)
-        self.__port.exchange(values, 0, False, True)
+        data = bytearray(reg_write.to_bytes(1, 'little'))
+        data.extend(bytearray(values))
+        # self.__port.write(reg_write.to_bytes(1, 'little'), True, False)
+        # self.__port.exchange(values, 0, False, True)
+        self.__port.exchange(data, 0, True, True)
         reg = self.__port.exchange([register.addr], register.size)
         return reg

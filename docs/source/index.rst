@@ -13,7 +13,7 @@ This is development branch which could be installed as:
 .. code-block:: bash
    :linenos:
 
-   pip install -U -e git+https://github.com/pavlot/pyrftdi.git#egg=pyrftdi
+   pip install -U -e git+https://github.com/pavlot/git#egg=pyrftdi
 
 .. toctree::
    :maxdepth: 2
