@@ -4,59 +4,55 @@
     "urls": [
         [
             "pyRFTdi/rx.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/rx.py"
-        ],
-        [
-            "pyRFTdi/spi",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/spi"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/rx.py"
         ],
         [
             "pyRFTdi/Rfm75Registers.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75Registers.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75Registers.py"
         ],
         [
             "pyRFTdi/Rfm75CRCConfigController.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75CRCConfigController.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75CRCConfigController.py"
         ],
         [
             "pyRFTdi/Rfm75PipeConfigController.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75PipeConfigController.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75PipeConfigController.py"
         ],
         [
             "pyRFTdi/Rfm75ConfigController.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75ConfigController.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75ConfigController.py"
         ],
         [
             "pyRFTdi/__init__.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/__init__.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/__init__.py"
         ],
         [
             "pyRFTdi/Rfm75RegisterController.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75RegisterController.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75RegisterController.py"
         ],
         [
             "pyRFTdi/Rfm75Enums.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75Enums.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75Enums.py"
         ],
         [
             "pyRFTdi/tx.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/tx.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/tx.py"
         ],
         [
             "pyRFTdi/Rfm75Controller.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/Rfm75Controller.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/Rfm75Controller.py"
         ],
         [
             "pyRFTdi/spi/SpiControllerRPPico.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/spi/SpiControllerRPPico.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/spi/SpiControllerRPPico.py"
         ],
         [
             "pyRFTdi/spi/__init__.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/spi/__init__.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/spi/__init__.py"
         ],
         [
             "pyRFTdi/spi/SpiController.py",
-            "github:pavlot/pyrftdi.git@RPPico/src/pyRFTdi/spi/SpiController.py"
+            "https://raw.githubusercontent.com/pavlot/pyrftdi/RPPico/src/pyRFTdi/spi/SpiController.py"
         ]
     ],
     "deps": [
