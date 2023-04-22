@@ -28,11 +28,11 @@ PAYLOAD_SIZE = 0x05                     # Static payload size up to 32b
 ##################################################################################################
 # End of config
 ##################################################################################################
-spi = SPI(0, baudrate=1000000, sck=Pin(2), mosi=Pin(3), miso=Pin(0))           # Create SPI peripheral 0 at frequency of 400kHz.
+spi = SPI(0, baudrate=1000000, sck=Pin(18), mosi=Pin(19), miso=Pin(16))           # Create SPI peripheral 0 at frequency of 400kHz.
                                         # Depending on the use case, extra parameters may be required
                                         # to select the bus characteristics and/or pins to use.
-cs_pin = Pin(1, mode=Pin.OUT, value=0)      # Create chip-select on pin 4.
-ce_pin = Pin(4, mode=Pin.OUT, value=0)
+cs_pin = Pin(17, mode=Pin.OUT, value=0)      # Create chip-select on pin 4.
+ce_pin = Pin(20, mode=Pin.OUT, value=0)
 spi_controller = SpiControllerRPPico(spi, cs_pin)
 
 reg_controller = Rfm75RegisterController(spi_controller)
