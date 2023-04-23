@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TX/RX with auto acknowledge enabled &mdash; pyRFTdi  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="prev" title="Simple TX/RX" href="rfm75_no_aa.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> pyRFTdi
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">RFM75 HOWTO</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rfm75_no_aa.html">Simple TX/RX</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">TX/RX with auto acknowledge enabled</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-parameters">Configuration parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-chip-to-transmit-receive-data">Configure chip to transmit/receive data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyRFTdi.html">pyRFTdi API documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyRFTdi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">RFM75 HOWTO</a> &raquo;</li>
+        
+      <li>TX/RX with auto acknowledge enabled</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/rfm75/rfm75_aa.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="tx-rx-with-auto-acknowledge-enabled">
+<h1>TX/RX with auto acknowledge enabled<a class="headerlink" href="#tx-rx-with-auto-acknowledge-enabled" title="Permalink to this heading">¶</a></h1>
+<p><a class="reference external" href="https://github.com/pavlot/pyrftdi/tree/main//examples/rx_tx_aa_enabled/">/examples/rx_tx_aa_enabled/</a> demonstrate how to transfer data between two RFM devices with auto aknowledge enabled.</p>
+<p>This mode forces transmitter repeat last packet until confirmation from receiver obtained.</p>
+<p>If no confirmation from receiver get after 15 retransmittion <code class="code docutils literal notranslate"><span class="pre">MAX_RT</span></code> flag is set and could be detected by
+<code class="code docutils literal notranslate"><span class="pre">controller.is_max_rt()</span></code> call. After this python program should decide what to do with failed packet.
+To be able to continue transmition MAX_RT flag must be unset calling <code class="code docutils literal notranslate"><span class="pre">controller.unset_max_rt()</span></code></p>
+<p>In this example there are two scripts: <a class="reference external" href="https://github.com/pavlot/pyrftdi/tree/main//examples/rx_tx_aa_enabled/rx.py">/examples/rx_tx_aa_enabled/rx.py</a> to receive data
+and <a class="reference external" href="https://github.com/pavlot/pyrftdi/tree/main//examples/rx_tx_aa_enabled/tx.py">/examples/rx_tx_aa_enabled/tx.py</a> to transfer data</p>
+<p>Each script runs infinite loop to transmit/receive data.</p>
+<p>Payload is 5 byte length and contains magic sequence <strong>cafeb0baxx</strong>, where xx is a counter</p>
+<section id="configuration-parameters">
+<h2>Configuration parameters<a class="headerlink" href="#configuration-parameters" title="Permalink to this heading">¶</a></h2>
+<p>After RFM device wired to FTDI, you need to provide URL for FTDI device.
+Check <a class="reference external" href="https://eblot.github.io/pyftdi/urlscheme.html">pyFTDI documentation</a> how to obtain correct url.</p>
+<p>For both rx and tx scripts this value controlled by varible</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">FTDI_URL</span> <span class="o">=</span> <span class="s1">&#39;ftdi://ftdi:232h:555551/1&#39;</span>  <span class="c1"># Url for ftdi chip, used to control RX</span>
+</pre></div>
+</div>
+<p>Make sure to use correct URL’s for TX and RX script. This example assume that rx and tx devices connected to different FTDI boards.</p>
+<p>Next parameter required for pairing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">CE_PIN</span> <span class="o">=</span> <span class="mi">7</span>                              <span class="c1"># FTDI pin used to as CE for RFM device</span>
+</pre></div>
+</div>
+<p>This is <a class="reference external" href="https://eblot.github.io/pyftdi/api/spi.html#gpios">FTDI GPIO</a> pin used to send CE signal to RFM device</p>
+<p>Rest of parameters are related to RFM chip config and explained in comments</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">PIPE_NO</span> <span class="o">=</span> <span class="mi">0</span>                             <span class="c1"># Pipe number used to receive data</span>
+<span class="linenos">2</span><span class="n">ADDR_WIDTH</span> <span class="o">=</span> <span class="n">Rfm75AddressWidth</span><span class="o">.</span><span class="n">ADDR_5</span>   <span class="c1"># How many bytes used for address</span>
+<span class="linenos">3</span><span class="n">PIPE_ADDR</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x11\x22\x33\x22\x11</span><span class="s1">&#39;</span>     <span class="c1"># Addres for selected pipe</span>
+<span class="linenos">4</span><span class="n">RF_CHANNEL</span> <span class="o">=</span> <span class="mh">0x02</span>                       <span class="c1"># Operating Rf Channel</span>
+<span class="linenos">5</span><span class="n">DATA_RATE</span> <span class="o">=</span> <span class="s1">&#39;250ksps&#39;</span>                   <span class="c1"># Transfer speed</span>
+<span class="linenos">6</span><span class="n">PAYLOAD_SIZE</span> <span class="o">=</span> <span class="mh">0x05</span>                     <span class="c1"># Static payload size up to 32b</span>
+</pre></div>
+</div>
+</section>
+<section id="configure-chip-to-transmit-receive-data">
+<h2>Configure chip to transmit/receive data<a class="headerlink" href="#configure-chip-to-transmit-receive-data" title="Permalink to this heading">¶</a></h2>
+<p>Simplest mode to transmit data it is when transmitter send data into the air and do not care whether it was received. Typical configuration is:</p>
+<p>TX Part configuration is the same as for previouse example. But additional tuning required</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Reset AA for all pipes</span>
+<span class="linenos">2</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">disable_auto_acknowledge</span><span class="p">()</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="c1"># Enable AA on TX part is mandatory, otherwise TX will be unable to receive ACK packet</span>
+<span class="linenos">5</span><span class="c1"># PIPE_ADDR must be the same as target RX pipe</span>
+<span class="linenos">6</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">enable_pipe</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">set_rx_pipe_address</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">,</span> <span class="n">PIPE_ADDR</span><span class="p">)</span>
+<span class="linenos">8</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">set_rx_pipe_payload_width</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">,</span> <span class="n">PAYLOAD_SIZE</span><span class="p">)</span>
+<span class="linenos">9</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">enable_pipe_auto_acknowledge</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On RX part pipe AA must be enabled:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Configure PIPE</span>
+<span class="linenos">2</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">enable_pipe</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">set_rx_pipe_address</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">,</span> <span class="n">PIPE_ADDR</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">set_rx_pipe_payload_width</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">,</span> <span class="n">PAYLOAD_SIZE</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">disable_auto_acknowledge</span><span class="p">()</span> <span class="c1"># Reset AA for all pipes if any were enabled</span>
+<span class="linenos">6</span><span class="n">controller</span><span class="o">.</span><span class="n">config_ctrl</span><span class="o">.</span><span class="n">pipe_ctrl</span><span class="o">.</span><span class="n">enable_pipe_auto_acknowledge</span><span class="p">(</span><span class="n">PIPE_NO</span><span class="p">)</span> <span class="c1"># Enable AA for PIPE_NO</span>
+</pre></div>
+</div>
+<p>After this normal start routine and receive loop can be started</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfm75_no_aa.html" class="btn btn-neutral float-left" title="Simple TX/RX" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2022, Pavlo Taranov
+
+    </p>
+  </div>
+    
+    
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
