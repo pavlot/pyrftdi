@@ -29,7 +29,7 @@ class SpiControllerRPPico(SpiController):
         if (start):
             self.__cs_pin(0)
         try:
-            logging.info("Write buffer: {}".format(write_buffer.hex()))
+            logging.debug("Write buffer: {}".format(write_buffer.hex()))
             self.__spi.write(write_buffer)
             self.__spi.readinto(read_buffer)   
         finally:
